@@ -1,0 +1,50 @@
+
+.header{
+    height: 30px;
+    background-color: blue;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.flex{
+    display: flex;
+}
+footer{
+
+    background-color: blue;
+    text-align: center;
+    justify-content: center;
+    font-size: 12px;
+
+}
+.flex-horizontal{
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+
+}
+.flex-vertical{
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+}
+.status-order{
+    text-align: center;
+    justify-content: center;
+} 
+.img-product{
+    width: 90%;
+    max-width: 300px;
+    text-align: center;
+    justify-content: center;
+}
+.button, .paypal-button-container, .home{
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+}
+.image-product{
+    height: 200px;
+    text-align: center;
+    justify-content: center;
+}

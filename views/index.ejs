@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <title>Water Shop</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=AWiWW0bdNM31kMgEHbWe6InYV4I1yYZQrHr5SbbajKYr44HGDTxby2ZsLQ3vxTgj4aGAFUNEuVBA_8ax&components=buttons"></script>
+  </head>
+  <body>
+    <div class="home">
+      <header class="header">
+        <h2>Water Shop</h2>
+      </header>
+      <hr />
+      <br />
+      <div class="flex-vertical">
+        <% for (var i = 0; i < products.length; i++) { %>
+        <div class="flex-vertical">
+          <div>
+            <img
+              src="https://thumbs.dreamstime.com/b/soda-water-bottle-25918448.jpg"
+              class="image-product"
+            />
+          </div>
+          <br />
+          <h2 class="product-title"><%= products[i].title %></h2>
+          <p class="description"><%= products[i].description %></p>
+          <br />
+          <h3 class="price">
+            <span>Price $: </span>
+            <%= products[i].price %>
+          </h3>
+          <br />
+          <!-- Adress information-->
+          <div class="adress">
+            <label for="street">Street Address</label>
+            <input
+              type="text"
+              id="street"
+              name="street"
+              placeholder="Street Address"
+              required
+            />
+            <br />
+            <label for="city">City</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              placeholder="City"
+              required
+            />
+            <br />
+            <label for="state">State</label>
+            <input
+              type="text"
+              id="state"
+              name="state"
+              placeholder="State"
+              required
+            /><br />
+            <label for="zip">ZIP Code</label>
+            <input
+              type="text"
+              id="zip"
+              name="zip"
+              placeholder="ZIP Code"
+              required
+            /><br />
+            <label for="country">Country</label>
+            <select id="country" name="country" required>
+              <option value="">Select Country</option>
+              <option value="US">United States</option></select
+            ><br />
+          </div>
+          <!-- Adding infos about the product selected -->
+          <form action="/buy?id=<%= products[i].id %>" method="POST">
+            <div class="button">
+              <div id="paypal-button-container"></div>
+            </div>
+            <script>
+              paypal
+                .Buttons({
+                  // Order is created on the server and the order id is returned
+                  createOrder() {
+                    return fetch("/my-server/create-paypal-order", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      // use the "body" param to optionally pass additional order information
+                      // like product skus and quantities
+                      body: JSON.stringify({
+                        cart: [
+                          {
+                            sku: "Y1",
+                            quantity: "1",
+                          },
+                        ],
+                      }),
+                    })
+                      .then((response) => response.json())
+                      .then((order) => order.id);
+                  },
+                  // Finalize the transaction on the server after payer approval
+                  onApprove(data) {
+                    return fetch("/my-server/capture-paypal-order", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        orderID: data.orderID,
+                      }),
+                    })
+                      .then((response) => response.json())
+                      .then((orderData) => {
+                        // Successful capture! For dev/demo purposes:
+                        console.log(
+                          "Capture result",
+                          orderData,
+                          JSON.stringify(orderData, null, 2)
+                        );
+                        const transaction =
+                          orderData.purchase_units[0].payments.captures[0];
+                        alert(
+                          `Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`
+                        );
+                        // When ready to go live, remove the alert and show a success message within this page. For example:
+                        const element = document.getElementById(
+                          "paypal-button-container"
+                        );
+                        element.innerHTML =
+                          "<h3>Thank you for your payment!</h3>";
+                        window.location.href = "sucess";
+                      });
+                  },
+                })
+                .render("#paypal-button-container");
+            </script>
+          </form>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <footer>
+      <h2>Developed by Rodrigo Rismardo</h2>
+    </footer>
+  </body>
+</html>

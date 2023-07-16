@@ -1,0 +1,12 @@
+{
+    "products": [
+      {
+        "id": 1,
+        "title": "Water bottle",
+        "description": "350ml Water bottle",
+        "price": 4,
+        "img": "/images/water.png"
+      }
+    ]
+  }
+  
